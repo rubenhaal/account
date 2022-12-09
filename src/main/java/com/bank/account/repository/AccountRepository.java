@@ -1,4 +1,10 @@
 package com.bank.account.repository;
 
-public interface AccountRepository {
+import com.bank.account.model.entity.AccountEntity;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+
+@Repository
+public interface AccountRepository extends CrudRepository<AccountEntity, Long> {
 }
