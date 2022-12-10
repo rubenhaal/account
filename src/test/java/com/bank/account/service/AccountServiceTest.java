@@ -1,8 +1,6 @@
 package com.bank.account.service;
 
 import com.bank.account.dto.AccountDto;
-import static org.assertj.core.api.Assertions.*;
-
 import com.bank.account.model.entity.AccountEntity;
 import com.bank.account.repository.AccountRepository;
 import org.junit.Before;
@@ -10,11 +8,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountServiceTest {
@@ -50,6 +49,7 @@ public class AccountServiceTest {
         //then
         assertThat(result.getCredit()).isEqualTo(2000L);
         assertThat(result.getUserId()).isEqualTo("testId");
+        verify(accountRepository, times(1)).save(any());
 
     }
 

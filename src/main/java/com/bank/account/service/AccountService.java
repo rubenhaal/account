@@ -23,10 +23,4 @@ public class AccountService {
         return mapper.map(account, AccountDto.class);
     }
 
-    private AccountEntity mapDtoToEntity(AccountDto accountDto){
-        AccountEntity account = new AccountEntity();
-        account.setCredit(accountDto.getCredit());
-        account.setUserId(accountDto.getUserId());
-        return account;
-    }
 }
