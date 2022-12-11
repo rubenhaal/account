@@ -21,7 +21,7 @@ public class Customer {
     @Size(min = 2, message = "User surname should have at least 2 characters")
     private String surname;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<AccountEntity> accounts;
 
 

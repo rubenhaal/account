@@ -15,6 +15,6 @@ public class AccountEntity {
     @ManyToOne
     private Customer customer;
     private Long credit;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 }

@@ -1,15 +1,15 @@
 package com.bank.account.controller;
 
+import com.bank.account.dto.AccountData;
 import com.bank.account.dto.AccountDto;
 import com.bank.account.exception.GeneralAccException;
 import com.bank.account.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("accounts")
+@RestController
+@RequestMapping("accounts")
 public class AccountController {
 
     @Autowired
@@ -18,7 +18,11 @@ public class AccountController {
     @PostMapping("/createaccount")
     public AccountDto createAccount(@Valid @RequestBody AccountDto account) throws GeneralAccException {
 
-        accountService.createAccount(account);
-        return new AccountDto();
+        return accountService.createAccount(account);
+    }
+
+    @GetMapping("/{id}")
+    public AccountData getAccountData(@PathVariable Long id) throws GeneralAccException {
+        return accountService.getAccountData(id);
     }
 }

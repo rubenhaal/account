@@ -9,5 +9,5 @@ public class AccountDto {
     private Long id;
     @NotNull
     private Long userId;
-    private Long credit;
+    private long credit;
 }
