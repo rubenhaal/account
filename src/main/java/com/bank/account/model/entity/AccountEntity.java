@@ -1,10 +1,9 @@
 package com.bank.account.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -13,6 +12,9 @@ public class AccountEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String userId;
+    @ManyToOne
+    private Customer customer;
     private Long credit;
+    @OneToMany
+    private List<Transaction> transactions;
 }
