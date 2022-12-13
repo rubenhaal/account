@@ -1,6 +1,8 @@
 package com.bank.account.service;
 
 import com.bank.account.dto.CustomerDto;
+import com.bank.account.exception.AccountNotFoundException;
+import com.bank.account.exception.CustomerNotFoundException;
 import com.bank.account.model.entity.Customer;
 import com.bank.account.repository.CustomerRepository;
 import org.junit.Test;
@@ -51,11 +53,9 @@ public class CustomerServiceTest {
 
         verify(customerRepository, times(1)).save(any());
     }
-    @Test
-    public void WhenCreateCustomer_ThrowExceptionIfAlreadyExist(){}
 
     @Test
-    public void WhenGetCustomer_ThenReturnCustomer(){
+    public void WhenGetCustomer_ThenReturnCustomer() throws CustomerNotFoundException {
         //Given
         Customer  customer = new Customer();
         customer.setSurname("nameTest");
@@ -69,5 +69,11 @@ public class CustomerServiceTest {
 
         verify(customerRepository, times(1)).findById(10L);
 
+    }
+    @Test
+    public void WhenGetCustomerNotInDb_ThenExceptionIsThrown(){
+        when(customerRepository.findById(20L)).thenReturn(Optional.empty());
+        assertThatExceptionOfType(CustomerNotFoundException.class)
+                .isThrownBy(() -> customerService.getCustomer(20L));
     }
 }

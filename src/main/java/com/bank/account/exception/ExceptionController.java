@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -13,12 +14,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({CustomerNotFoundException.class, AccountNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public final ResponseEntity<Object>handleCustomerNotFound(Exception ex, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse( ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public final ResponseEntity<Object>handleGeneralException(Exception ex, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse( ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
