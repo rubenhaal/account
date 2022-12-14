@@ -1,6 +1,6 @@
 package com.bank.account.service;
 
-import com.bank.account.dto.CustomerDto;
+import com.bank.account.dto.*;
 import com.bank.account.exception.CustomerNotFoundException;
 import com.bank.account.model.entity.Customer;
 import com.bank.account.repository.CustomerRepository;
@@ -32,11 +32,32 @@ public class CustomerService {
     public CustomerDto getCustomer(long id) throws CustomerNotFoundException {
         Optional<Customer> customerOpt = customerRepository.findById(id);
 
-
-
         if (!customerOpt.isPresent()) {
             throw new CustomerNotFoundException();
         }
             return mapper.map(customerOpt.get(), CustomerDto.class);
     }
+
+    @Transactional
+    public CustomerDataDto getCustomerData(long id) throws CustomerNotFoundException {
+        Optional<Customer> customerOpt = customerRepository.findById(id);
+
+        if (!customerOpt.isPresent()) {
+            throw new CustomerNotFoundException();
+        }
+        return mapToCustomerDataDto(customerOpt.get());
+    }
+
+    private CustomerDataDto mapToCustomerDataDto( Customer customer){
+        CustomerDataDto customerDataDto = new CustomerDataDto();
+        customerDataDto.setCustomerDto( mapper.map(customer, CustomerDto.class));
+        if(customer.getAccounts()!=null){
+            customerDataDto.setAccountDto(customer.getAccounts().stream()
+                    .map(accountData -> mapper.map(accountData, AccountDto.class))
+                                            .toList());
+        }
+        return  customerDataDto;
+    }
+
+
 }

@@ -1,8 +1,10 @@
 package com.bank.account.service;
 
+import com.bank.account.dto.CustomerDataDto;
 import com.bank.account.dto.CustomerDto;
 import com.bank.account.exception.AccountNotFoundException;
 import com.bank.account.exception.CustomerNotFoundException;
+import com.bank.account.model.entity.AccountEntity;
 import com.bank.account.model.entity.Customer;
 import com.bank.account.repository.CustomerRepository;
 import org.junit.Test;
@@ -13,6 +15,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -75,5 +78,29 @@ public class CustomerServiceTest {
         when(customerRepository.findById(20L)).thenReturn(Optional.empty());
         assertThatExceptionOfType(CustomerNotFoundException.class)
                 .isThrownBy(() -> customerService.getCustomer(20L));
+    }
+
+    @Test
+    public void WhenGetCustomerData_ThenReturnCustomer() throws CustomerNotFoundException {
+        //Given
+        Customer  customer = new Customer();
+        customer.setSurname("nameTest");
+        customer.setName("nameTest");
+        AccountEntity account = new AccountEntity();
+        account.setCredit(100L);
+        customer.setAccounts(new ArrayList<>());
+        customer.getAccounts().add(account);
+        when(customerRepository.findById(10L)).thenReturn((Optional.of(customer)));
+        //when
+        CustomerDataDto result = customerService.getCustomerData(10L);
+        //then
+        assertThat(result.getCustomerDto()).isNotNull();
+        assertThat(result.getCustomerDto().getName()).isEqualTo("nameTest");
+        assertThat(result.getCustomerDto().getSurname()).isEqualTo("nameTest");
+        assertThat(result.getAccountDto()).isNotNull();
+        assertThat(result.getAccountDto().size()).isEqualTo(1);
+
+        verify(customerRepository, times(1)).findById(10L);
+
     }
 }

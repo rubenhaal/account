@@ -18,6 +18,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +52,8 @@ public class AccountServiceTest {
 
         Customer customer = new Customer();
         customer.setId(20L);
+        customer.setAccounts(new ArrayList<>());
+        customer.getAccounts().add(account);
         account.setCustomer(customer);
 
         when(customerRepository.findById(20L)).thenReturn(Optional.of(customer));

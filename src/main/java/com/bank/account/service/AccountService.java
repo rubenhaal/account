@@ -34,12 +34,18 @@ public class AccountService {
     @Transactional
     public AccountDto createAccount( AccountDto accountDto) throws GeneralAccException {
 
-        Optional<Customer> customerOpt = getCustomer(accountDto);
+        Customer customer = getCustomer(accountDto);
 
         AccountEntity account= mapper.map(accountDto, AccountEntity.class);
-        account.setCustomer(customerOpt.get());
-        account.setTransactions(createTransactions(accountDto));
+        account.setCustomer(customer);
+
+        if(accountDto.getCredit()!=0){
+            account.setTransactions(createTransactions(accountDto,account));
+        }
         account = accountRepository.save(account);
+
+        customer.getAccounts().add(account);
+        customerRepository.save(customer);
 
         accountDto= mapper.map(account, AccountDto.class);
         accountDto.setUserId(account.getCustomer().getId());
@@ -47,16 +53,18 @@ public class AccountService {
         return accountDto;
     }
 
-    private Optional<Customer> getCustomer(AccountDto accountDto) throws CustomerNotFoundException {
+    private Customer getCustomer(AccountDto accountDto) throws CustomerNotFoundException {
         Optional <Customer> customerOpt = customerRepository.findById(accountDto.getUserId());
         if(customerOpt.isEmpty()){
             throw new CustomerNotFoundException();
         }
-        return customerOpt;
+        return customerOpt.get();
     }
-    private List<Transaction> createTransactions(AccountDto accountDto){
+    private List<Transaction> createTransactions(AccountDto accountDto,AccountEntity account){
         Transaction transaction = new Transaction();
+
         transaction.setAmount(accountDto.getCredit());
+        transaction.setAccount(account);
         return List.of(transaction);
     }
     @Transactional

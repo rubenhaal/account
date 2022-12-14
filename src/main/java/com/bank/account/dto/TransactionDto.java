@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class TransactionDto {
-
+    private Long id;
     @NotNull
     private Long amount;
     @NotNull

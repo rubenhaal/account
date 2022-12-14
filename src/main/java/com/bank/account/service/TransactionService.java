@@ -9,6 +9,7 @@ import com.bank.account.repository.TransactionRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class TransactionService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Transactional
     public TransactionDto createTransaction(TransactionDto transactionDto) throws AccountNotFoundException {
 
         Optional<AccountEntity> accountOpt = accountRepository.findById(transactionDto.getAccountId());
@@ -29,10 +31,14 @@ public class TransactionService {
         if(accountOpt.isEmpty()){
             throw new AccountNotFoundException();
         }
+        AccountEntity account = accountOpt.get();
 
         Transaction transaction = mapper.map(transactionDto, Transaction.class);
-        transaction.setAccount(accountOpt.get());
-        transaction = transactionRepository.save(transaction);
+        transactionRepository.save(transaction);
+        account.getTransactions().add(transaction);
+        account.setCredit(account.getCredit()+ transaction.getAmount());
+        transactionRepository.save(transaction);
+
 
         return mapper.map(transaction, TransactionDto.class);
     }

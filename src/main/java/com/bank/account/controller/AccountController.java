@@ -23,9 +23,9 @@ public class AccountController {
         return accountService.createAccount(account);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{accountId}")
     @ResponseStatus(HttpStatus.OK)
-    public AccountData getAccountData(@PathVariable Long id) throws GeneralAccException {
-        return accountService.getAccountData(id);
+    public AccountData getAccountData(@PathVariable Long accountId) throws GeneralAccException {
+        return accountService.getAccountData(accountId);
     }
 }

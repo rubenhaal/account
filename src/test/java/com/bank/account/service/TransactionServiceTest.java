@@ -16,6 +16,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -47,6 +48,8 @@ public class TransactionServiceTest {
         transaction.setAmount(100L);
 
         AccountEntity account = new AccountEntity();
+        account.setTransactions(new ArrayList<>());
+        account.setCredit(0L);
 
         Mockito.when(transactionRepository.save(Mockito.any())).thenReturn(transaction);
         when(accountRepository.findById(20L)).thenReturn(Optional.of(account));

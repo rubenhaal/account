@@ -1,5 +1,6 @@
 package com.bank.account.controller;
 
+import com.bank.account.dto.CustomerDataDto;
 import com.bank.account.dto.CustomerDto;
 import com.bank.account.exception.CustomerNotFoundException;
 import com.bank.account.service.CustomerService;
@@ -21,9 +22,15 @@ public class CustomerController {
         return customerService.createCustomer(customerDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{customerId}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerDto showCustomerInformation(@PathVariable Long id) throws CustomerNotFoundException {
-        return customerService.getCustomer(id);
+    public CustomerDto showCustomer(@PathVariable Long customerId) throws CustomerNotFoundException {
+        return customerService.getCustomer(customerId);
+    }
+
+    @GetMapping("/data/{customerId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDataDto showCustomerInformation(@PathVariable Long customerId) throws CustomerNotFoundException {
+        return customerService.getCustomerData(customerId);
     }
 }
